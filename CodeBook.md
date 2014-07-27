@@ -9,17 +9,17 @@ This describes two data sets:
 
 # <a name="common"></a>Common
 
-## General Naming Conventions:
+## General Conventions:
 
-All columns are named in a camel-case fashion.
-
+ * All columns are named in a camel-case fashion.
+ * Unless specifically noted, all columns are numeric in the range [-1,1].
 
 ## Shared Columns:
 
 The following columns are in both data sets:
 
- * ActivityName: The activity label that describes what the subject was doing during the measurement period
- * SubjectId: An identifier of the subject who carried out the activity
+ * ActivityName: The activity label that describes what the subject was doing during the measurement period (type: character vector)
+ * SubjectId: An identifier of the subject who carried out the activity (type: integer)
 
 
 # <a name="mean_and_std"></a>First Data Set: Mean and Standard Deviation Values

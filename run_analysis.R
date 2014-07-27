@@ -3,7 +3,7 @@
 # 2. Extracts only the measurements on the mean and standard deviation for each measurement. 
 # 3. Uses descriptive activity names to name the activities in the data set
 # 4. Appropriately labels the data set with descriptive variable names. 
-# 5. Creates a second, independent tidy data set with the average of each variable
+# 5. Creates a second, independent tidy data set with the mean of each variable
 #    for each activity and each subject. 
 
 library(reshape2)
@@ -84,7 +84,7 @@ determine_columns_for_mean_and_std_data_set <- function(features) {
   c( "ActivityId", "SubjectId", features[(grepl( "meanFreq\\(\\)|mean\\(\\)|std\\(\\)", features$FeatureName, ignore.case = TRUE )),]$FeatureColName )
 }
 
-calculate_averages_by_activity_and_subject <- function( combined ) {
+calculate_means_by_activity_and_subject <- function( combined ) {
   melted <- melt(combined, id.vars=c("ActivityId", "SubjectId"))
   melted$variable <- paste0( "Mean", melted$variable )
   dcast(melted, ActivityId + SubjectId ~ variable, mean)  
@@ -110,16 +110,10 @@ if ( ! exists("combined") ) {
 
 setwd("../..")
 
-if ( ! exists("mean_and_std_measurements") ) {
-  mean_and_std_measurements <- combined[,determine_columns_for_mean_and_std_data_set( features )]
-  mean_and_std_measurements <- replace_activity_ids_with_activity_labels( mean_and_std_measurements, activities )
-}
+mean_and_std_measurements <- combined[,determine_columns_for_mean_and_std_data_set( features )]
+mean_and_std_measurements <- replace_activity_ids_with_activity_labels( mean_and_std_measurements, activities )
 
-if ( ! exists("average_by_activity_and_subject") ) {
-  average_by_activity_and_subject <- calculate_averages_by_activity_and_subject( combined )
-  average_by_activity_and_subject <- replace_activity_ids_with_activity_labels( average_by_activity_and_subject, activities )
-}
+means_by_activity_and_subject <- calculate_means_by_activity_and_subject( combined )
+means_by_activity_and_subject <- replace_activity_ids_with_activity_labels( means_by_activity_and_subject, activities )
 
-
-
-#g write.table, set the option of not writing the line numbers as that can look a bit ugly when reading it back in. As you were very warne
+write.table( means_by_activity_and_subject, file = "means_by_activity_and_subject.txt", row.names = FALSE )
