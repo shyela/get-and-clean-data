@@ -97,18 +97,23 @@ replace_activity_ids_with_activity_labels <- function( source_data, activities )
   source_with_activities[,col_names]
 }
 
+orig_working_dir <- getwd()
 
-download_and_unzip_data()
-setwd("data/UCI HAR Dataset")
+if ( ! file.exists("train") ) {
+  # the raw data dirs are not in the current working dir, so let's look for the containing dir
+  if ( file.exists("UCI HAR Dataset") ) {
+    setwd("UCI HAR Dataset")
+  } else {
+    download_and_unzip_data()
+    setwd("data/UCI HAR Dataset")
+  }
+}
 
 activities <- load_activities()
 features <- load_features()
+combined <- create_combined_data_set( features )
 
-if ( ! exists("combined") ) {
-  combined <- create_combined_data_set( features )
-}
-
-setwd("../..")
+setwd(orig_working_dir)
 
 mean_and_std_measurements <- combined[,determine_columns_for_mean_and_std_data_set( features )]
 mean_and_std_measurements <- replace_activity_ids_with_activity_labels( mean_and_std_measurements, activities )
